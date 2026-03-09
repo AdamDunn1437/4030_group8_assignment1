@@ -1,0 +1,41 @@
+# Environment settings
+environment:
+  name: "SuperMarioBros-1-1-v3"
+  frame_stack: 4
+  resize: 84
+  action_space: 2
+
+# Training parameters
+training:
+  episodes: 5
+  max_steps_per_episode: 10000
+  batch_size: 32
+  gamma: 0.9
+  learning_rate: 0.00025
+
+# Exploration parameters
+exploration:
+  epsilon_start: 1.0
+  epsilon_min: 0.1
+  epsilon_decay: 0.99999975
+
+# Replay buffer parameters
+replay_buffer:
+  capacity: 100000
+  learning_starts: 1000
+
+# Target network
+target_network:
+  sync_frequency: 10000
+
+# Prioritized replay parameters
+prioritized_replay:
+  alpha: 0.6
+  beta_start: 0.4
+  beta_frames: 100000
+  epsilon: 0.00001
+
+# Optimization
+optimization:
+  grad_clip: 1.0
+  loss: "huber"
