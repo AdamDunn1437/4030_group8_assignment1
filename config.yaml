@@ -1,3 +1,6 @@
+# Agent selection: "d3qn" (online, Task 4.1) or "d3qn_er" (experience replay, Task 4.2)
+agent_type: "d3qn_er"
+
 # Environment settings
 environment:
   name: "SuperMarioBros-1-1-v3"
