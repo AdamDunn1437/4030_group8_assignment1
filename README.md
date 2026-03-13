@@ -2,8 +2,11 @@
 
 This repository contains our implementation of a **Double Dueling Deep Q-Network (D3QN)** agent trained to play **Super Mario Bros World 1-1** using the `gym-super-mario-bros` environment.
 
-At this point **Task 4.1 (Online Learning without Experience Replay)** has been implemented and trained.  
-Future tasks will extend this baseline with replay buffers.
+At this point the repository includes implementations for:
+
+- **Task 4.1**: Online learning without experience replay
+- **Task 4.2**: Uniform experience replay
+- **Task 4.3**: Prioritized experience replay
 
 ---
 
@@ -230,4 +233,8 @@ Expected improvements:
 
 - faster learning  
 - more efficient updates  
+
+To run Task 4.3, set `agent_type: "d3qn_per"` in `config.yaml` and run:
+
+python training_script.py
 

@@ -1,4 +1,7 @@
-# Agent selection: "d3qn" (online, Task 4.1) or "d3qn_er" (experience replay, Task 4.2)
+# Agent selection:
+# "d3qn"     -> online learning (Task 4.1)
+# "d3qn_er"  -> experience replay (Task 4.2)
+# "d3qn_per" -> prioritized experience replay (Task 4.3)
 agent_type: "d3qn_er"
 
 # Environment settings

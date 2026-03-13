@@ -7,6 +7,7 @@ from utils import load_config, print_config
 from environment import make_mario_env
 from d3qn_agent import D3QNAgent
 from d3qn_er_agent import D3QNERAgent
+from d3qn_per_agent import D3QNPERAgent
 
 
 def train():
@@ -28,6 +29,8 @@ def train():
     agent_type = config.get("agent_type", "d3qn")
     if agent_type == "d3qn_er":
         agent = D3QNERAgent(config)
+    elif agent_type == "d3qn_per":
+        agent = D3QNPERAgent(config)
     else:
         agent = D3QNAgent(config)
 
@@ -52,7 +55,7 @@ def train():
             next_state, reward, terminated, truncated, info = env.step(action)
             done = terminated or truncated
 
-            if agent_type == "d3qn_er":
+            if agent_type in {"d3qn_er", "d3qn_per"}:
                 agent.store_transition(state, action, reward, next_state, done)
                 loss = agent.train_step()
             else:
