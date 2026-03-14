@@ -5,16 +5,12 @@ import torch.nn as nn
 import torch.optim as optim
 
 from d3qn_network import D3QN
+from utils import get_torch_device
 
 
 class D3QNAgent:
     def __init__(self, config):
-        if torch.cuda.is_available():
-            self.device = torch.device("cuda")
-        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-            self.device = torch.device("mps")
-        else:
-            self.device = torch.device("cpu")
+        self.device = get_torch_device()
 
         # action space
         self.num_actions = config["environment"]["action_space"]

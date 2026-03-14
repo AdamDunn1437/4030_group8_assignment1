@@ -1,6 +1,7 @@
 import yaml
 import os
 import json
+import torch
 
 
 def load_config(config_path="config.yaml"):
@@ -28,3 +29,20 @@ def print_config(config):
                 print(f"{key}: {value}")
         else:
             print(values)
+
+
+def get_torch_device():
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+
+    try:
+        import torch_directml
+
+        return torch_directml.device()
+    except ImportError:
+        pass
+
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return torch.device("mps")
+
+    return torch.device("cpu")
