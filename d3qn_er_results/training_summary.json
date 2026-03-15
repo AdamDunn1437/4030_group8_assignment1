@@ -1,0 +1,8 @@
+{
+    "episodes": 5000,
+    "final_epsilon": 0.1,
+    "mean_reward": 1188.9822,
+    "max_reward": 3028.0,
+    "min_reward": 216.0,
+    "mean_loss": 0.8026221750333795
+}
