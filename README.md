@@ -170,9 +170,10 @@ target = r + γ * Q_target(s', a') * (1 − done)
 
 # Running Training
 
-To start training:
+To run Task 4.1, set `agent_type: "d3qn"` in `config.yaml` and run:
 
 python training_script.py
+
 
 The script will:
 
@@ -219,6 +220,11 @@ This is expected and serves as the **baseline comparison for later tasks**.
 
 Task 4.2  
 Add **Experience Replay Buffer**
+
+To run Task 4.2, set `agent_type: "d3qn_er"` in `config.yaml` and run:
+
+python training_script.py
+
 
 Expected improvements:
 

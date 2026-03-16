@@ -15,9 +15,12 @@ def moving_average(data, window=50):
 
 
 def load_results(directory):
-    rewards = np.load(directory / "episode_rewards.npy")
-    losses = np.load(directory / "episode_losses.npy")
-    return rewards, losses
+    rewards_path = directory / "episode_rewards.npy"
+    losses_path = directory / "episode_losses.npy"
+    if not rewards_path.exists() or not losses_path.exists():
+        print(f"Skipping {directory.name}: results not found.")
+        return None, None
+    return np.load(rewards_path), np.load(losses_path)
 
 
 def plot_single(data, title, ylabel, save_path):
@@ -53,92 +56,55 @@ def plot_overlay(curves, labels, title, ylabel, save_path):
 
 def main():
 
-    # load results
+    # load results (None if a directory is missing)
     dqn_rewards, dqn_losses = load_results(dqn_dir)
-    er_rewards, er_losses = load_results(er_dir)
+    er_rewards,  er_losses  = load_results(er_dir)
     per_rewards, per_losses = load_results(per_dir)
 
     # =========================
     # Individual plots
     # =========================
 
-    plot_single(
-        dqn_rewards,
-        "D3QN Online Reward Curve",
-        "Reward (50 episode moving average)",
-        dqn_dir / "task1_reward_curve.png"
-    )
+    individual = [
+        (dqn_rewards, dqn_losses, dqn_dir, "D3QN Online",  "task1"),
+        (er_rewards,  er_losses,  er_dir,  "D3QN + ER",    "task2"),
+        (per_rewards, per_losses, per_dir, "D3QN + PER",   "task3"),
+    ]
 
-    plot_single(
-        dqn_losses,
-        "D3QN Online Loss Curve",
-        "Loss (50 episode moving average)",
-        dqn_dir / "task1_loss_curve.png"
-    )
-
-    plot_single(
-        er_rewards,
-        "D3QN + ER Reward Curve",
-        "Reward (50 episode moving average)",
-        er_dir / "task2_reward_curve.png"
-    )
-
-    plot_single(
-        er_losses,
-        "D3QN + ER Loss Curve",
-        "Loss (50 episode moving average)",
-        er_dir / "task2_loss_curve.png"
-    )
-
-    plot_single(
-        per_rewards,
-        "D3QN + PER Reward Curve",
-        "Reward (50 episode moving average)",
-        per_dir / "task3_reward_curve.png"
-    )
-
-    plot_single(
-        per_losses,
-        "D3QN + PER Loss Curve",
-        "Loss (50 episode moving average)",
-        per_dir / "task3_loss_curve.png"
-    )
+    for rewards, losses, directory, label, prefix in individual:
+        if rewards is None:
+            continue
+        plot_single(rewards, f"{label} Reward Curve", "Reward (50 episode moving average)", directory / f"{prefix}_reward_curve.png")
+        plot_single(losses,  f"{label} Loss Curve",   "Loss (50 episode moving average)",   directory / f"{prefix}_loss_curve.png")
 
     # =========================
     # Overlay comparison plots
     # =========================
 
-    plot_overlay(
-        [dqn_rewards, er_rewards, per_rewards],
-        ["D3QN Online", "D3QN + ER", "D3QN + PER"],
-        "Reward Comparison (All Tasks)",
-        "Reward (50 episode moving average)",
-        "reward_comparison_all.png"
-    )
+    all_agents = [
+        (dqn_rewards, dqn_losses, "D3QN Online"),
+        (er_rewards,  er_losses,  "D3QN + ER"),
+        (per_rewards, per_losses, "D3QN + PER"),
+    ]
+    available = [(r, l, lbl) for r, l, lbl in all_agents if r is not None]
 
-    plot_overlay(
-        [dqn_losses, er_losses, per_losses],
-        ["D3QN Online", "D3QN + ER", "D3QN + PER"],
-        "Loss Comparison (All Tasks)",
-        "Loss (50 episode moving average)",
-        "loss_comparison_all.png"
-    )
-
-    plot_overlay(
-        [dqn_rewards, per_rewards],
-        ["D3QN Online", "D3QN + PER"],
-        "Reward Comparison (DQN vs PER)",
-        "Reward (50 episode moving average)",
-        "reward_comparison_dqn_vs_per.png"
-    )
-
-    plot_overlay(
-        [dqn_losses, per_losses],
-        ["D3QN Online", "D3QN + PER"],
-        "Loss Comparison (DQN vs PER)",
-        "Loss (50 episode moving average)",
-        "loss_comparison_dqn_vs_per.png"
-    )
+    if len(available) >= 2:
+        plot_overlay(
+            [r for r, _, _ in available],
+            [lbl for _, _, lbl in available],
+            "Reward Comparison (All Tasks)",
+            "Reward (50 episode moving average)",
+            "reward_comparison_all.png"
+        )
+        plot_overlay(
+            [l for _, l, _ in available],
+            [lbl for _, _, lbl in available],
+            "Loss Comparison (All Tasks)",
+            "Loss (50 episode moving average)",
+            "loss_comparison_all.png"
+        )
+    else:
+        print("Not enough agents with results to generate overlay plots.")
 
     print("Plots generated successfully.")
 
