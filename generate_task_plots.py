@@ -4,6 +4,7 @@ from pathlib import Path
 
 # result folders
 dqn_dir = Path("d3qn_results")
+er_dir = Path("d3qn_er_results")
 per_dir = Path("d3qn_per_results")
 
 
@@ -54,6 +55,7 @@ def main():
 
     # load results
     dqn_rewards, dqn_losses = load_results(dqn_dir)
+    er_rewards, er_losses = load_results(er_dir)
     per_rewards, per_losses = load_results(per_dir)
 
     # =========================
@@ -75,6 +77,20 @@ def main():
     )
 
     plot_single(
+        er_rewards,
+        "D3QN + ER Reward Curve",
+        "Reward (50 episode moving average)",
+        er_dir / "task2_reward_curve.png"
+    )
+
+    plot_single(
+        er_losses,
+        "D3QN + ER Loss Curve",
+        "Loss (50 episode moving average)",
+        er_dir / "task2_loss_curve.png"
+    )
+
+    plot_single(
         per_rewards,
         "D3QN + PER Reward Curve",
         "Reward (50 episode moving average)",
@@ -91,6 +107,22 @@ def main():
     # =========================
     # Overlay comparison plots
     # =========================
+
+    plot_overlay(
+        [dqn_rewards, er_rewards, per_rewards],
+        ["D3QN Online", "D3QN + ER", "D3QN + PER"],
+        "Reward Comparison (All Tasks)",
+        "Reward (50 episode moving average)",
+        "reward_comparison_all.png"
+    )
+
+    plot_overlay(
+        [dqn_losses, er_losses, per_losses],
+        ["D3QN Online", "D3QN + ER", "D3QN + PER"],
+        "Loss Comparison (All Tasks)",
+        "Loss (50 episode moving average)",
+        "loss_comparison_all.png"
+    )
 
     plot_overlay(
         [dqn_rewards, per_rewards],
